@@ -4,21 +4,26 @@
  */
 package com.ufpso.estructuras;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import java.time.format.DateTimeParseException;
 
 /**
  *
  * @author anderson
  */
-public class Main extends javax.swing.JFrame {    
+public class Main extends javax.swing.JFrame {
+
     /**
      * Creates new form Main
      */
     public Main() {
         initComponents();
     }
-    
+
     Cinema cinema;
 
     /**
@@ -42,6 +47,11 @@ public class Main extends javax.swing.JFrame {
         _lblCine.setText("Cine");
 
         btnSellTickets.setText("Vender boletas");
+        btnSellTickets.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSellTicketsActionPerformed(evt);
+            }
+        });
 
         btnSellReport.setText("Reporte de compras");
 
@@ -94,6 +104,58 @@ public class Main extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnShowClientsActionPerformed
 
+    private void btnSellTicketsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSellTicketsActionPerformed
+        if (this.cinema.tickets == 0) {
+            JOptionPane.showMessageDialog(rootPane, "No hay más boletos.");
+            return;
+        }
+
+        String identification = JOptionPane.showInputDialog("Número de documento:");
+
+        Client client = null;
+        for (Client c : this.cinema.clients) {
+            if (c.identification.equals(identification)) {
+                client = c;
+                break;
+            }
+        }
+
+        if (client == null) {
+            String rawDate = JOptionPane.showInputDialog(rootPane, "Introduzca su fecha de nacimiento (AÑO-MES-DÍA, ej. 2015-09-30):");
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("uuuu-MM-dd").withResolverStyle(ResolverStyle.STRICT);
+
+            LocalDate date;
+            try {
+                date = LocalDate.parse(rawDate, dtf);
+            } catch (DateTimeParseException e) {
+                JOptionPane.showMessageDialog(rootPane, "Fecha inválida. Intente nuevamente.");
+                return;
+            }
+
+            client = new Client(date, identification);
+            this.cinema.clients.add(client);
+        }
+
+        int maxTickets = Math.min(this.cinema.tickets, 5 - client.tickets);
+
+        String rawTickets = JOptionPane.showInputDialog(String.format("¿Cuántos tiquetes va a comprar (máximo %d)?", maxTickets));
+        int tickets;
+        try {
+            tickets = Integer.parseInt(rawTickets);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(rootPane, "Debe introducir un número entero.");
+            return;
+        }
+
+        if (tickets > maxTickets) {
+            JOptionPane.showMessageDialog(rootPane, "Son demasiados boletos. Intente nuevamente.");
+            return;
+        }
+
+        client.tickets += tickets;
+        this.cinema.tickets -= tickets;
+    }//GEN-LAST:event_btnSellTicketsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -125,13 +187,13 @@ public class Main extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 Main mainFrame = new Main();
-                
+
                 String movieName = JOptionPane.showInputDialog(mainFrame, "Nombre de la película:");
                 if (movieName.isBlank()) {
                     JOptionPane.showMessageDialog(mainFrame, "El nombre no puede estar vacío.");
                     return;
                 }
-                
+
                 int isAdultMovieRaw = JOptionPane.showConfirmDialog(mainFrame, "¿Es película para adultos?", "¿Pueden entrar menores de 14 años?", JOptionPane.YES_NO_OPTION);
                 boolean isAdultMovie = false;
                 if (isAdultMovieRaw == 0) {
@@ -146,7 +208,7 @@ public class Main extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(mainFrame, "Debe ser un número entero.");
                     return;
                 }
-                
+
                 mainFrame.cinema = new Cinema(movieName, isAdultMovie, tickets);
                 mainFrame.setVisible(true);
             }

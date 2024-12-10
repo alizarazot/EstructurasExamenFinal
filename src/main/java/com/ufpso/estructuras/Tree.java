@@ -1,6 +1,8 @@
 
 package com.ufpso.estructuras;
 
+import java.util.ArrayList;
+
 public class Tree {
    Client client;
    Tree left;
@@ -26,25 +28,25 @@ public class Tree {
       }
    }
 
-   public static void sortArray(Client[] clients) {
-      if (clients.length <= 1) {
+   public static void sortArray(ArrayList<Client> clients) {
+      if (clients.size() <= 1) {
          return;
       }
 
-      Tree tree = new Tree(clients[0]);
-      for (int i = 1; i < clients.length; i++) {
-         tree.addClient(clients[i]);
+      Tree tree = new Tree(clients.get(0));
+      for (int i = 1; i < clients.size(); i++) {
+         tree.addClient(clients.get(i));
       }
 
       tree.replaceInList(clients, 0);
    }
 
-   public int replaceInList(Client[] clients, int index) {
+   public int replaceInList(ArrayList<Client> clients, int index) {
       if (this.left != null) {
          index = this.left.replaceInList(clients, index);
       }
       
-      clients[index] = this.client;
+      clients.set(index, this.client);
       index++;
 
       if (this.right != null) {

@@ -1,6 +1,8 @@
 
 package com.ufpso.estructuras;
 
+import java.util.ArrayList;
+
 public class Cinema {
    String movieName;
    boolean isAdultMovie;
@@ -10,9 +12,10 @@ public class Cinema {
         this.movieName = movieName;
         this.isAdultMovie = isAdultMovie;
         this.tickets = tickets;
+        this.clients = new ArrayList<>();
     }
 
-   Client[] clients;
+   ArrayList<Client> clients;
 
    public String getStats() {
       int majors = 0;
@@ -35,7 +38,7 @@ public class Cinema {
    public String getClientInfo(String identification) {
       Client client = null; 
       for (Client c: this.clients) {
-         if (c.identification == identification) {
+         if (c.identification.equals(identification)) {
             client = c;
             break;
          }
@@ -46,9 +49,5 @@ public class Cinema {
       }
 
       return String.format("La persona con documento %s compró %d boletas.", client.identification, client.tickets);
-   }
-
-   public void sortClients() {
-
    }
 }
