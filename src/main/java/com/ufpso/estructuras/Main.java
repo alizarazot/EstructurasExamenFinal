@@ -54,6 +54,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         btnSellReport.setText("Reporte de compras");
+        btnSellReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSellReportActionPerformed(evt);
+            }
+        });
 
         btnSellCheck.setText("Comprobar venta");
 
@@ -111,6 +116,10 @@ public class Main extends javax.swing.JFrame {
         }
 
         String identification = JOptionPane.showInputDialog("Número de documento:");
+        if (identification.isBlank()) {
+            JOptionPane.showMessageDialog(rootPane, "Debe introducir un número de documento. Intente nuevamente.");
+            return;
+        }
 
         Client client = null;
         for (Client c : this.cinema.clients) {
@@ -135,8 +144,17 @@ public class Main extends javax.swing.JFrame {
             client = new Client(date, identification);
             this.cinema.clients.add(client);
         }
+        
+        if (this.cinema.isAdultMovie && client.getAge() < 14) {
+            JOptionPane.showMessageDialog(rootPane, "Debe tener más de 14 años para comprar boletos para una película para adultos.");
+            return;
+        }
 
         int maxTickets = Math.min(this.cinema.tickets, 5 - client.tickets);
+        if (maxTickets == 0) {
+            JOptionPane.showMessageDialog(rootPane, "Ya no puede comprar más boletos.");
+            return;
+        }
 
         String rawTickets = JOptionPane.showInputDialog(String.format("¿Cuántos tiquetes va a comprar (máximo %d)?", maxTickets));
         int tickets;
@@ -155,6 +173,10 @@ public class Main extends javax.swing.JFrame {
         client.tickets += tickets;
         this.cinema.tickets -= tickets;
     }//GEN-LAST:event_btnSellTicketsActionPerformed
+
+    private void btnSellReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSellReportActionPerformed
+        JOptionPane.showMessageDialog(rootPane, this.cinema.getStats());
+    }//GEN-LAST:event_btnSellReportActionPerformed
 
     /**
      * @param args the command line arguments
