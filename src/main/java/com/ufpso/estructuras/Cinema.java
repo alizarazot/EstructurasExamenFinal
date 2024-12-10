@@ -6,6 +6,12 @@ public class Cinema {
    boolean isAdultMovie;
    int tickets;
 
+    public Cinema(String movieName, boolean isAdultMovie, int tickets) {
+        this.movieName = movieName;
+        this.isAdultMovie = isAdultMovie;
+        this.tickets = tickets;
+    }
+
    Client[] clients;
 
    public String getStats() {
