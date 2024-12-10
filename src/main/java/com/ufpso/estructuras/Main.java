@@ -61,6 +61,11 @@ public class Main extends javax.swing.JFrame {
         });
 
         btnSellCheck.setText("Comprobar venta");
+        btnSellCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSellCheckActionPerformed(evt);
+            }
+        });
 
         btnShowClients.setText("Mostrar compradores");
         btnShowClients.addActionListener(new java.awt.event.ActionListener() {
@@ -106,7 +111,15 @@ public class Main extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnShowClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowClientsActionPerformed
-        // TODO add your handling code here:
+        Tree.sortArray(this.cinema.clients);
+        
+        String clients = "";
+        
+        for (Client c: this.cinema.clients) {
+            clients += String.format("[%s - %s] %d años (%d boletas).\n", c.identification, c.birthday, c.getAge(), c.tickets);
+        }
+        
+        JOptionPane.showMessageDialog(rootPane, clients);
     }//GEN-LAST:event_btnShowClientsActionPerformed
 
     private void btnSellTicketsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSellTicketsActionPerformed
@@ -177,6 +190,24 @@ public class Main extends javax.swing.JFrame {
     private void btnSellReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSellReportActionPerformed
         JOptionPane.showMessageDialog(rootPane, this.cinema.getStats());
     }//GEN-LAST:event_btnSellReportActionPerformed
+
+    private void btnSellCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSellCheckActionPerformed
+        String identification = JOptionPane.showInputDialog("Número de documento:");
+        Client client = null;
+        for (Client c : this.cinema.clients) {
+            if (c.identification.equals(identification)) {
+                client = c;
+                break;
+            }
+        }
+        
+        if (client == null) {
+            JOptionPane.showMessageDialog(rootPane, "Usted no ha comprado boletas.");
+            return;
+        }
+        
+        JOptionPane.showMessageDialog(rootPane, String.format("Usted ha comprado %d boletas.", client.tickets));
+    }//GEN-LAST:event_btnSellCheckActionPerformed
 
     /**
      * @param args the command line arguments
