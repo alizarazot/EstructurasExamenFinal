@@ -112,13 +112,13 @@ public class Main extends javax.swing.JFrame {
 
     private void btnShowClientsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowClientsActionPerformed
         Tree.sortArray(this.cinema.clients);
-        
+
         String clients = "";
-        
-        for (Client c: this.cinema.clients) {
+
+        for (Client c : this.cinema.clients) {
             clients += String.format("[%s - %s] %d años (%d boletas).\n", c.identification, c.birthday, c.getAge(), c.tickets);
         }
-        
+
         JOptionPane.showMessageDialog(rootPane, clients);
     }//GEN-LAST:event_btnShowClientsActionPerformed
 
@@ -157,7 +157,7 @@ public class Main extends javax.swing.JFrame {
             client = new Client(date, identification);
             this.cinema.clients.add(client);
         }
-        
+
         if (this.cinema.isAdultMovie && client.getAge() < 14) {
             JOptionPane.showMessageDialog(rootPane, "Debe tener más de 14 años para comprar boletos para una película para adultos.");
             return;
@@ -200,12 +200,12 @@ public class Main extends javax.swing.JFrame {
                 break;
             }
         }
-        
+
         if (client == null) {
             JOptionPane.showMessageDialog(rootPane, "Usted no ha comprado boletas.");
             return;
         }
-        
+
         JOptionPane.showMessageDialog(rootPane, String.format("Usted ha comprado %d boletas.", client.tickets));
     }//GEN-LAST:event_btnSellCheckActionPerformed
 
